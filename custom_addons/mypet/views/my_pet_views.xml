@@ -51,11 +51,11 @@
             </field>
         </record>
 
-        <record id="my_pet_tree_view" model="ir.ui.view">
-            <field name="name">my.pet.tree.view</field>
+        <record id="my_pet_list_view" model="ir.ui.view">
+            <field name="name">my.pet.list.view</field>
             <field name="model">my.pet</field>
             <field name="arch" type="xml">
-                <tree string="Pets" default_order="create_date desc">
+                <list string="Pets" default_order="create_date desc">
                     <field name="name"/>
                     <field name="nickname"/>
                     <field name="age"/>
@@ -63,7 +63,7 @@
                     <field name="dob"/>
                     <field name="gender"/>
                     <field name="owner_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -73,7 +73,7 @@
             <field name="res_model">my.pet</field>
             <!-- <field name="view_type">form</field> --> <!-- Odoo 13 has removed this field -->
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('my_pet_tree_view')}),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('my_pet_list_view')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('my_pet_form_view')})]"/>
         </record>
 

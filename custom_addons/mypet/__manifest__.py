@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "My pet - minhng.info",
+    'name': "My pet - mduc.info",
     'summary': """My pet model""",
     'description': """Managing pet information""",
     'author': "minhng.info",
