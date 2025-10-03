@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Authors -->
+    <record id="author_nguyen_du" model="library.author">
+        <field name="name">Nguyễn Du</field>
+        <field name="full_name">Nguyễn Du</field>
+        <field name="birth_date">1765-01-03</field>
+        <field name="death_date">1820-09-16</field>
+        <field name="nationality">Việt Nam</field>
+        <field name="biography">Đại thi hào Việt Nam, tác giả của Truyện Kiều</field>
+    </record>
+
+    <record id="author_nam_cao" model="library.author">
+        <field name="name">Nam Cao</field>
+        <field name="full_name">Trần Hữu Tri</field>
+        <field name="birth_date">1915-10-29</field>
+        <field name="death_date">1951-11-30</field>
+        <field name="nationality">Việt Nam</field>
+        <field name="biography">Nhà văn hiện thực Việt Nam</field>
+    </record>
+
+    <record id="author_shakespeare" model="library.author">
+        <field name="name">William Shakespeare</field>
+        <field name="full_name">William Shakespeare</field>
+        <field name="birth_date">1564-04-26</field>
+        <field name="death_date">1616-04-23</field>
+        <field name="nationality">Anh</field>
+        <field name="biography">Nhà văn, nhà thơ vĩ đại của Anh</field>
+    </record>
+
+    <!-- Demo Books -->
+    <record id="book_kieu" model="library.book">
+        <field name="name">Truyện Kiều</field>
+        <field name="author_id" ref="author_nguyen_du"/>
+        <field name="category_id" ref="category_vietnamese_literature"/>
+        <field name="isbn">9786041032613</field>
+        <field name="publisher">Nhà xuất bản Văn học</field>
+        <field name="publication_date">1820-01-01</field>
+        <field name="language">vi</field>
+        <field name="pages">356</field>
+        <field name="price">150000</field>
+        <field name="description">Tác phẩm bất hủ của văn học Việt Nam</field>
+        <field name="location">A1-001</field>
+        <field name="rating">5</field>
+        <field name="tags">văn học cổ điển, thơ Nôm, Nguyễn Du</field>
+    </record>
+
+    <record id="book_chi_pheo" model="library.book">
+        <field name="name">Chí Phèo</field>
+        <field name="author_id" ref="author_nam_cao"/>
+        <field name="category_id" ref="category_vietnamese_literature"/>
+        <field name="isbn">9786041032620</field>
+        <field name="publisher">Nhà xuất bản Kim Đồng</field>
+        <field name="publication_date">1941-01-01</field>
+        <field name="language">vi</field>
+        <field name="pages">156</field>
+        <field name="price">80000</field>
+        <field name="description">Tác phẩm nổi tiếng của Nam Cao</field>
+        <field name="location">A1-002</field>
+        <field name="rating">4</field>
+        <field name="tags">văn học hiện đại, Nam Cao, tiểu thuyết</field>
+    </record>
+
+    <record id="book_hamlet" model="library.book">
+        <field name="name">Hamlet</field>
+        <field name="author_id" ref="author_shakespeare"/>
+        <field name="category_id" ref="category_foreign_literature"/>
+        <field name="isbn">9781234567890</field>
+        <field name="publisher">Penguin Classics</field>
+        <field name="publication_date">1603-01-01</field>
+        <field name="language">en</field>
+        <field name="pages">342</field>
+        <field name="price">200000</field>
+        <field name="description">Bi kịch nổi tiếng của Shakespeare</field>
+        <field name="location">B2-045</field>
+        <field name="rating">5</field>
+        <field name="tags">kịch, Shakespeare, bi kịch</field>
+    </record>
+
+    <!-- Demo Members -->
+    <record id="member_nguyen_van_a" model="library.member">
+        <field name="name">Nguyễn Văn A</field>
+        <field name="email">nguyenvana@example.com</field>
+        <field name="phone">0123456789</field>
+        <field name="mobile">0987654321</field>
+        <field name="address">123 Đường ABC, Quận 1, TP.HCM</field>
+        <field name="birth_date">1995-05-15</field>
+        <field name="gender">male</field>
+        <field name="member_type">student</field>
+        <field name="student_id">SV001</field>
+        <field name="department">Công nghệ thông tin</field>
+    </record>
+
+    <record id="member_tran_thi_b" model="library.member">
+        <field name="name">Trần Thị B</field>
+        <field name="email">tranthib@example.com</field>
+        <field name="phone">0123456788</field>
+        <field name="address">456 Đường XYZ, Quận 2, TP.HCM</field>
+        <field name="birth_date">1988-08-20</field>
+        <field name="gender">female</field>
+        <field name="member_type">teacher</field>
+        <field name="student_id">GV002</field>
+        <field name="department">Văn học</field>
+    </record>
+
+    <!-- Demo Borrowings -->
+    <record id="borrowing_001" model="library.borrowing">
+        <field name="member_id" ref="member_nguyen_van_a"/>
+        <field name="book_id" ref="book_kieu"/>
+        <field name="borrow_date" eval="(datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+        <field name="due_date" eval="(datetime.now() + timedelta(days=9)).strftime('%Y-%m-%d')"/>
+        <field name="state">borrowed</field>
+        <field name="notes">Mượn để nghiên cứu về văn học cổ điển</field>
+    </record>
+
+    <record id="borrowing_002" model="library.borrowing">
+        <field name="member_id" ref="member_tran_thi_b"/>
+        <field name="book_id" ref="book_chi_pheo"/>
+        <field name="borrow_date" eval="(datetime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+        <field name="due_date" eval="(datetime.now() - timedelta(days=6)).strftime('%Y-%m-%d')"/>
+        <field name="return_date" eval="(datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+        <field name="state">returned</field>
+        <field name="notes">Sử dụng cho việc giảng dạy</field>
+    </record>
+</odoo> 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_library_management_main"
+              name="Thư viện"
+              sequence="20"
+              web_icon="library_management,static/description/icon.png"/>
+
+    <!-- Operations Menu -->
+    <menuitem id="menu_library_operations"
+              name="Hoạt động"
+              parent="menu_library_management_main"
+              sequence="10"/>
+
+    <menuitem id="menu_library_borrowing"
+              name="Mượn sách"
+              parent="menu_library_operations"
+              action="action_library_borrowing"
+              sequence="10"/>
+
+    <menuitem id="menu_library_quick_borrow"
+              name="Mượn nhanh"
+              parent="menu_library_operations"
+              action="action_library_quick_borrow"
+              sequence="20"/>
+
+    <!-- Management Menu -->
+    <menuitem id="menu_library_management"
+              name="Quản lý"
+              parent="menu_library_management_main"
+              sequence="20"/>
+
+    <menuitem id="menu_library_book"
+              name="Sách"
+              parent="menu_library_management"
+              action="action_library_book"
+              sequence="10"/>
+
+    <menuitem id="menu_library_member"
+              name="Thành viên"
+              parent="menu_library_management"
+              action="action_library_member"
+              sequence="20"/>
+
+    <menuitem id="menu_library_author"
+              name="Tác giả"
+              parent="menu_library_management"
+              action="action_library_author"
+              sequence="30"/>
+
+    <menuitem id="menu_library_category"
+              name="Thể loại"
+              parent="menu_library_management"
+              action="action_library_category"
+              sequence="40"/>
+
+    <!-- Reports Menu -->
+    <menuitem id="menu_library_reports"
+              name="Báo cáo"
+              parent="menu_library_management_main"
+              sequence="30"/>
+
+    <!-- Settings Menu -->
+    <menuitem id="menu_library_settings"
+              name="Cấu hình"
+              parent="menu_library_management_main"
+              sequence="90"/>
+</odoo> 

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Library Management Categories -->
+    <record id="module_category_library_management" model="ir.module.category">
+        <field name="name">Thư viện</field>
+        <field name="description">Quản lý hệ thống thư viện</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- User Groups -->
+    <record id="group_library_user" model="res.groups">
+        <field name="name">Người dùng thư viện</field>
+        <field name="category_id" ref="module_category_library_management"/>
+        <field name="comment">Có thể xem sách và mượn/trả sách</field>
+    </record>
+
+    <record id="group_library_librarian" model="res.groups">
+        <field name="name">Thủ thư</field>
+        <field name="category_id" ref="module_category_library_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_library_user'))]"/>
+        <field name="comment">Có thể quản lý sách, thành viên và mượn/trả sách</field>
+    </record>
+
+    <record id="group_library_manager" model="res.groups">
+        <field name="name">Quản lý thư viện</field>
+        <field name="category_id" ref="module_category_library_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_library_librarian'))]"/>
+        <field name="comment">Có quyền quản lý toàn bộ hệ thống thư viện</field>
+    </record>
+
+    <!-- Record Rules -->
+    
+    <!-- Author Rules -->
+    <record id="library_author_rule_read" model="ir.rule">
+        <field name="name">Library Author: Read All</field>
+        <field name="model_id" ref="model_library_author"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="library_author_rule_write" model="ir.rule">
+        <field name="name">Library Author: Write/Create/Delete</field>
+        <field name="model_id" ref="model_library_author"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_librarian'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Category Rules -->
+    <record id="library_category_rule_read" model="ir.rule">
+        <field name="name">Library Category: Read All</field>
+        <field name="model_id" ref="model_library_category"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="library_category_rule_write" model="ir.rule">
+        <field name="name">Library Category: Write/Create/Delete</field>
+        <field name="model_id" ref="model_library_category"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_librarian'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Book Rules -->
+    <record id="library_book_rule_read" model="ir.rule">
+        <field name="name">Library Book: Read All</field>
+        <field name="model_id" ref="model_library_book"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="library_book_rule_write" model="ir.rule">
+        <field name="name">Library Book: Write/Create/Delete</field>
+        <field name="model_id" ref="model_library_book"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_librarian'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Member Rules -->
+    <record id="library_member_rule_own" model="ir.rule">
+        <field name="name">Library Member: Own Records</field>
+        <field name="model_id" ref="model_library_member"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_library_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="library_member_rule_all" model="ir.rule">
+        <field name="name">Library Member: All Records</field>
+        <field name="model_id" ref="model_library_member"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_librarian'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Borrowing Rules -->
+    <record id="library_borrowing_rule_own" model="ir.rule">
+        <field name="name">Library Borrowing: Own Records</field>
+        <field name="model_id" ref="model_library_borrowing"/>
+        <field name="domain_force">[('member_id.create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_library_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="library_borrowing_rule_all" model="ir.rule">
+        <field name="name">Library Borrowing: All Records</field>
+        <field name="model_id" ref="model_library_borrowing"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_library_librarian'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo> 

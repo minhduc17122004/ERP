@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Author Form View -->
+    <record id="view_library_author_form" model="ir.ui.view">
+        <field name="name">library.author.form</field>
+        <field name="model">library.author</field>
+        <field name="arch" type="xml">
+            <form string="Tác giả">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_books" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="book_count" widget="statinfo" string="Sách"/>
+                        </button>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên tác giả"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="full_name"/>
+                            <field name="nationality"/>
+                            <field name="email"/>
+                            <field name="website" widget="url"/>
+                        </group>
+                        <group>
+                            <field name="birth_date"/>
+                            <field name="death_date"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tiểu sử" name="biography">
+                            <field name="biography" placeholder="Tiểu sử tác giả..."/>
+                        </page>
+                        <page string="Sách" name="books">
+                            <field name="book_ids">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="category_id"/>
+                                    <field name="state"/>
+                                    <field name="publication_date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Author list View -->
+    <record id="view_library_author_list" model="ir.ui.view">
+        <field name="name">library.author.list</field>
+        <field name="model">library.author</field>
+        <field name="arch" type="xml">
+            <list string="Tác giả">
+                <field name="name"/>
+                <field name="nationality"/>
+                <field name="birth_date"/>
+                <field name="book_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Author Kanban View -->
+    <record id="view_library_author_kanban" model="ir.ui.view">
+        <field name="name">library.author.kanban</field>
+        <field name="model">library.author</field>
+        <field name="arch" type="xml">
+            <kanban string="Tác giả">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="nationality"/>
+                <field name="book_count"/>
+                <field name="image"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('library.author', 'image', record.id.raw_value)" alt="Author"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="nationality"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="o_kanban_record_subtitle">
+                                            <t t-esc="record.book_count.value"/> sách
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Author Search View -->
+    <record id="view_library_author_search" model="ir.ui.view">
+        <field name="name">library.author.search</field>
+        <field name="model">library.author</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm tác giả">
+                <field name="name" string="Tên tác giả"/>
+                <field name="nationality" string="Quốc tịch"/>
+                <field name="email"/>
+                <separator/>
+                <filter string="Có sách" name="has_books" domain="[('book_count', '>', 0)]"/>
+                <filter string="Hoạt động" name="active" domain="[('active', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Quốc tịch" name="group_nationality" context="{'group_by': 'nationality'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Author Action -->
+    <record id="action_library_author" model="ir.actions.act_window">
+        <field name="name">Tác giả</field>
+        <field name="res_model">library.author</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_library_author_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo tác giả đầu tiên
+            </p>
+            <p>
+                Quản lý thông tin tác giả trong hệ thống thư viện.
+            </p>
+        </field>
+    </record>
+</odoo> 

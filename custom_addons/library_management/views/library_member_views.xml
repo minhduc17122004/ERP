@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Member Form View -->
+    <record id="view_library_member_form" model="ir.ui.view">
+        <field name="name">library.member.form</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <form string="Thành viên">
+                <header>
+                    <button name="action_suspend" string="Tạm ngưng" type="object" class="btn-warning" states="active"/>
+                    <button name="action_reactivate" string="Kích hoạt" type="object" class="btn-primary" states="suspended"/>
+                    <button name="action_renew_membership" string="Gia hạn" type="object" class="btn-success" states="active,suspended"/>
+                    <button name="action_cancel" string="Hủy bỏ" type="object" class="btn-danger" states="active,suspended,expired"/>
+                    <field name="state" widget="statusbar" statusbar_visible="active,suspended,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_borrowings" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="borrowing_count" widget="statinfo" string="Tổng mượn"/>
+                        </button>
+                        <button name="action_view_current_borrowings" type="object" class="oe_stat_button" icon="fa-clock-o">
+                            <field name="current_borrowing_count" widget="statinfo" string="Đang mượn"/>
+                        </button>
+                        <button name="action_view_overdue" type="object" class="oe_stat_button" icon="fa-exclamation-triangle" attrs="{'invisible': [('overdue_count', '=', 0)]}">
+                            <field name="overdue_count" widget="statinfo" string="Quá hạn"/>
+                        </button>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Họ và tên"/>
+                        </h1>
+                        <h3>
+                            <field name="code" readonly="1"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                            <field name="member_type"/>
+                            <field name="student_id"/>
+                        </group>
+                        <group>
+                            <field name="birth_date"/>
+                            <field name="gender"/>
+                            <field name="department"/>
+                            <field name="registration_date"/>
+                            <field name="expiry_date"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="address" placeholder="Địa chỉ liên hệ"/>
+                    </group>
+                    <notebook>
+                        <page string="Thông tin mượn sách" name="borrowing_info">
+                            <group>
+                                <group>
+                                    <field name="max_borrowing_limit" readonly="1"/>
+                                    <field name="fine_amount" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Sách đang mượn" name="current_borrowings">
+                            <field name="current_borrowing_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="book_id"/>
+                                    <field name="borrow_date"/>
+                                    <field name="due_date"/>
+                                    <field name="days_overdue"/>
+                                    <field name="fine_amount"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Lịch sử mượn" name="borrowing_history">
+                            <field name="borrowing_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="book_id"/>
+                                    <field name="borrow_date"/>
+                                    <field name="due_date"/>
+                                    <field name="return_date"/>
+                                    <field name="state"/>
+                                    <field name="fine_amount"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Ghi chú" name="notes">
+                            <field name="notes" placeholder="Ghi chú về thành viên..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Member list View -->
+    <record id="view_library_member_list" model="ir.ui.view">
+        <field name="name">library.member.list</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <list string="Thành viên" decoration-success="state=='active'" decoration-warning="state=='suspended'" decoration-danger="state=='expired'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="member_type"/>
+                <field name="student_id"/>
+                <field name="current_borrowing_count"/>
+                <field name="overdue_count"/>
+                <field name="fine_amount"/>
+                <field name="expiry_date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Member Kanban View -->
+    <record id="view_library_member_kanban" model="ir.ui.view">
+        <field name="name">library.member.kanban</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <kanban string="Thành viên" default_group_by="member_type">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="member_type"/>
+                <field name="state"/>
+                <field name="current_borrowing_count"/>
+                <field name="overdue_count"/>
+                <field name="image"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('library.member', 'image', record.id.raw_value)" alt="Member"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="email"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="o_kanban_record_subtitle">
+                                            Đang mượn: <t t-esc="record.current_borrowing_count.value"/>
+                                        </span>
+                                        <span t-if="record.overdue_count.value > 0" class="badge badge-danger">
+                                            Quá hạn: <t t-esc="record.overdue_count.value"/>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span class="badge" t-att-class="'badge-' + (record.state.raw_value == 'active' ? 'success' : record.state.raw_value == 'suspended' ? 'warning' : 'danger')">
+                                            <field name="state"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Member Search View -->
+    <record id="view_library_member_search" model="ir.ui.view">
+        <field name="name">library.member.search</field>
+        <field name="model">library.member</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm thành viên">
+                <field name="name" string="Tên"/>
+                <field name="code" string="Mã thành viên"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="student_id" string="Mã sinh viên/nhân viên"/>
+                <field name="department" string="Khoa/Phòng ban"/>
+                <separator/>
+                <filter string="Hoạt động" name="active_members" domain="[('state', '=', 'active')]"/>
+                <filter string="Tạm ngưng" name="suspended" domain="[('state', '=', 'suspended')]"/>
+                <filter string="Hết hạn" name="expired" domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <filter string="Có sách đang mượn" name="has_borrowings" domain="[('current_borrowing_count', '>', 0)]"/>
+                <filter string="Có sách quá hạn" name="has_overdue" domain="[('overdue_count', '>', 0)]"/>
+                <filter string="Có tiền phạt" name="has_fine" domain="[('fine_amount', '>', 0)]"/>
+                <separator/>
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Loại thành viên" name="group_type" context="{'group_by': 'member_type'}"/>
+                    <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Khoa/Phòng ban" name="group_department" context="{'group_by': 'department'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Member Action -->
+    <record id="action_library_member" model="ir.actions.act_window">
+        <field name="name">Thành viên</field>
+        <field name="res_model">library.member</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_library_member_search"/>
+        <field name="context">{'search_default_active_members': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Đăng ký thành viên đầu tiên
+            </p>
+            <p>
+                Quản lý thành viên thư viện và thông tin mượn sách.
+            </p>
+        </field>
+    </record>
+</odoo> 

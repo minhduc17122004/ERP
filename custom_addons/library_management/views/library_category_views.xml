@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Category Form View -->
+    <record id="view_library_category_form" model="ir.ui.view">
+        <field name="name">library.category.form</field>
+        <field name="model">library.category</field>
+        <field name="arch" type="xml">
+            <form string="Thể loại sách">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_books" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="book_count" widget="statinfo" string="Sách"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên thể loại"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="color" widget="color"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mô tả" name="description">
+                            <field name="description" placeholder="Mô tả về thể loại..."/>
+                        </page>
+                        <page string="Thể loại con" name="children">
+                            <field name="child_ids">
+                                <list>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="book_count"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Category list View -->
+    <record id="view_library_category_list" model="ir.ui.view">
+        <field name="name">library.category.list</field>
+        <field name="model">library.category</field>
+        <field name="arch" type="xml">
+            <list string="Thể loại sách">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="book_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Category Search View -->
+    <record id="view_library_category_search" model="ir.ui.view">
+        <field name="name">library.category.search</field>
+        <field name="model">library.category</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm thể loại">
+                <field name="name" string="Tên thể loại"/>
+                <field name="code" string="Mã thể loại"/>
+                <field name="parent_id" string="Thể loại cha"/>
+                <separator/>
+                <filter string="Có sách" name="has_books" domain="[('book_count', '>', 0)]"/>
+                <filter string="Thể loại gốc" name="root_categories" domain="[('parent_id', '=', False)]"/>
+                <filter string="Hoạt động" name="active" domain="[('active', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Thể loại cha" name="group_parent" context="{'group_by': 'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Category Action -->
+    <record id="action_library_category" model="ir.actions.act_window">
+        <field name="name">Thể loại sách</field>
+        <field name="res_model">library.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_library_category_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo thể loại sách đầu tiên
+            </p>
+            <p>
+                Quản lý các thể loại sách trong thư viện.
+            </p>
+        </field>
+    </record>
+</odoo> 

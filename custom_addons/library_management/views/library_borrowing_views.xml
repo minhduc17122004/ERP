@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Borrowing Form View -->
+    <record id="view_library_borrowing_form" model="ir.ui.view">
+        <field name="name">library.borrowing.form</field>
+        <field name="model">library.borrowing</field>
+        <field name="arch" type="xml">
+            <form string="Mượn sách">
+                <header>
+                    <button name="action_confirm_borrow" string="Xác nhận mượn" type="object" class="btn-primary" states="borrowed"/>
+                    <button name="action_return_book" string="Trả sách" type="object" class="btn-success" states="borrowed,overdue"/>
+                    <button name="action_renew" string="Gia hạn" type="object" class="btn-info" states="borrowed"/>
+                    <button name="action_mark_lost" string="Thất lạc" type="object" class="btn-warning" states="borrowed,overdue"/>
+                    <button name="action_pay_fine" string="Thanh toán phạt" type="object" class="btn-secondary" attrs="{'invisible': ['|', ('fine_amount', '=', 0), ('fine_paid', '=', True)]}"/>
+                    <button name="action_cancel" string="Hủy bỏ" type="object" class="btn-danger" states="borrowed"/>
+                    <field name="state" widget="statusbar" statusbar_visible="borrowed,returned,overdue"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="member_id" options="{'no_create': True}"/>
+                            <field name="book_id" options="{'no_create': True}"/>
+                            <field name="librarian_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="borrow_date"/>
+                            <field name="due_date"/>
+                            <field name="return_date" readonly="1"/>
+                            <field name="renewal_count" readonly="1"/>
+                            <field name="max_renewals" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="days_borrowed" readonly="1"/>
+                            <field name="days_overdue" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="fine_amount" readonly="1"/>
+                            <field name="fine_paid" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ghi chú" name="notes">
+                            <field name="notes" placeholder="Ghi chú về việc mượn sách..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Borrowing list View -->
+    <record id="view_library_borrowing_list" model="ir.ui.view">
+        <field name="name">library.borrowing.list</field>
+        <field name="model">library.borrowing</field>
+        <field name="arch" type="xml">
+            <list string="Mượn sách" decoration-info="state=='borrowed'" decoration-success="state=='returned'" decoration-danger="state=='overdue'" decoration-warning="state=='lost'">
+                <field name="name"/>
+                <field name="member_id"/>
+                <field name="book_id"/>
+                <field name="borrow_date"/>
+                <field name="due_date"/>
+                <field name="return_date"/>
+                <field name="days_overdue"/>
+                <field name="fine_amount"/>
+                <field name="state"/>
+                <field name="librarian_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Borrowing Kanban View -->
+    <record id="view_library_borrowing_kanban" model="ir.ui.view">
+        <field name="name">library.borrowing.kanban</field>
+        <field name="model">library.borrowing</field>
+        <field name="arch" type="xml">
+            <kanban string="Mượn sách" default_group_by="state">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="member_id"/>
+                <field name="book_id"/>
+                <field name="due_date"/>
+                <field name="days_overdue"/>
+                <field name="fine_amount"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="book_id"/>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="member_id"/>
+                                </div>
+                                <div class="o_kanban_record_subtitle">
+                                    Hạn trả: <field name="due_date"/>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span t-if="record.days_overdue.value > 0" class="badge badge-danger">
+                                            Quá hạn: <t t-esc="record.days_overdue.value"/> ngày
+                                        </span>
+                                        <span t-if="record.fine_amount.value > 0" class="badge badge-warning">
+                                            Phạt: <t t-esc="record.fine_amount.value"/> VND
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Borrowing Search View -->
+    <record id="view_library_borrowing_search" model="ir.ui.view">
+        <field name="name">library.borrowing.search</field>
+        <field name="model">library.borrowing</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm mượn sách">
+                <field name="name" string="Mã mượn"/>
+                <field name="member_id" string="Thành viên"/>
+                <field name="book_id" string="Sách"/>
+                <field name="librarian_id" string="Thủ thư"/>
+                <separator/>
+                <filter string="Đang mượn" name="borrowed" domain="[('state', '=', 'borrowed')]"/>
+                <filter string="Đã trả" name="returned" domain="[('state', '=', 'returned')]"/>
+                <filter string="Quá hạn" name="overdue" domain="[('state', '=', 'overdue')]"/>
+                <filter string="Thất lạc" name="lost" domain="[('state', '=', 'lost')]"/>
+                <separator/>
+                <filter string="Có tiền phạt" name="has_fine" domain="[('fine_amount', '>', 0)]"/>
+                <filter string="Chưa thanh toán phạt" name="unpaid_fine" domain="[('fine_amount', '>', 0), ('fine_paid', '=', False)]"/>
+                <separator/>
+                <filter string="Hôm nay" name="today" domain="[('borrow_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Tuần này" name="this_week" domain="[('borrow_date', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Tháng này" name="this_month" domain="[('borrow_date', '>=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Nhóm theo">
+                    <filter string="Trạng thái" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Thành viên" name="group_member" context="{'group_by': 'member_id'}"/>
+                    <filter string="Sách" name="group_book" context="{'group_by': 'book_id'}"/>
+                    <filter string="Ngày mượn" name="group_borrow_date" context="{'group_by': 'borrow_date'}"/>
+                    <filter string="Thủ thư" name="group_librarian" context="{'group_by': 'librarian_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Borrowing Action -->
+    <record id="action_library_borrowing" model="ir.actions.act_window">
+        <field name="name">Mượn sách</field>
+        <field name="res_model">library.borrowing</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_library_borrowing_search"/>
+        <field name="context">{'search_default_borrowed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo phiếu mượn sách đầu tiên
+            </p>
+            <p>
+                Quản lý việc mượn và trả sách của thành viên.
+            </p>
+        </field>
+    </record>
+
+    <!-- Quick Borrow Action -->
+    <record id="action_library_quick_borrow" model="ir.actions.act_window">
+        <field name="name">Mượn sách nhanh</field>
+        <field name="res_model">library.borrowing</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_state': 'borrowed'}</field>
+    </record>
+</odoo> 

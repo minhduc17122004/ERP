@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Categories -->
+    <record id="category_literature" model="library.category">
+        <field name="name">Văn học</field>
+        <field name="code">LIT</field>
+        <field name="description">Sách văn học, tiểu thuyết, thơ ca</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="category_science" model="library.category">
+        <field name="name">Khoa học</field>
+        <field name="code">SCI</field>
+        <field name="description">Sách khoa học, công nghệ, kỹ thuật</field>
+        <field name="color">2</field>
+    </record>
+
+    <record id="category_education" model="library.category">
+        <field name="name">Giáo dục</field>
+        <field name="code">EDU</field>
+        <field name="description">Sách giáo dục, học tập</field>
+        <field name="color">3</field>
+    </record>
+
+    <record id="category_history" model="library.category">
+        <field name="name">Lịch sử</field>
+        <field name="code">HIS</field>
+        <field name="description">Sách lịch sử, địa lý</field>
+        <field name="color">4</field>
+    </record>
+
+    <record id="category_philosophy" model="library.category">
+        <field name="name">Triết học</field>
+        <field name="code">PHI</field>
+        <field name="description">Sách triết học, tôn giáo</field>
+        <field name="color">5</field>
+    </record>
+
+    <!-- Sub Categories -->
+    <record id="category_vietnamese_literature" model="library.category">
+        <field name="name">Văn học Việt Nam</field>
+        <field name="code">VN-LIT</field>
+        <field name="parent_id" ref="category_literature"/>
+        <field name="description">Văn học Việt Nam</field>
+    </record>
+
+    <record id="category_foreign_literature" model="library.category">
+        <field name="name">Văn học nước ngoài</field>
+        <field name="code">FOR-LIT</field>
+        <field name="parent_id" ref="category_literature"/>
+        <field name="description">Văn học nước ngoài</field>
+    </record>
+
+    <record id="category_computer_science" model="library.category">
+        <field name="name">Tin học</field>
+        <field name="code">CS</field>
+        <field name="parent_id" ref="category_science"/>
+        <field name="description">Tin học, máy tính, lập trình</field>
+    </record>
+
+    <record id="category_mathematics" model="library.category">
+        <field name="name">Toán học</field>
+        <field name="code">MATH</field>
+        <field name="parent_id" ref="category_science"/>
+        <field name="description">Toán học cơ bản và nâng cao</field>
+    </record>
+
+    <record id="category_physics" model="library.category">
+        <field name="name">Vật lý</field>
+        <field name="code">PHY</field>
+        <field name="parent_id" ref="category_science"/>
+        <field name="description">Vật lý học</field>
+    </record>
+</odoo> 
